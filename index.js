@@ -13,6 +13,10 @@ app.use(express.json());
 //allow cross origin requests
 app.use(cors());
 
+app.get("/", (req, res) => {
+    res.send("Hello World!")
+})
+
 //Available Routes
 app.use('/api/', require('./routes/WaitlistForm'));
 
