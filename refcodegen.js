@@ -1,0 +1,57 @@
+//Generates the unique referral code for the user
+const Waitlist = require("./models/Waitlist");
+
+async function generateUniqueReferralCode() {
+    const prefix = "BV-";
+    const characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+    let referralCode = prefix;
+    
+    for (let i = 0; i < 7; i++) {
+      referralCode += characters.charAt(Math.floor(Math.random() * characters.length));
+    }
+    
+    // Check if the referral code already exists in the database
+    const referralCodeExists = await checkReferralCodeExists(referralCode);
+    
+    if (referralCodeExists) {
+      // If the referral code already exists, generate a new one
+      return generateUniqueReferralCode();
+    } else {
+      // If the referral code does not exist, return it
+      return referralCode;
+    }
+  }
+  
+  // Check if the referral code already exists in the database
+  async function checkReferralCodeExists(referralCode) {
+    try {
+        const document = await Waitlist.findById(referralCode);
+        return !!document;
+      } catch (error) {
+        console.log(`Error checking if ID exists: ${error.message}`);
+        return false;
+      }
+  }
+
+  //function to increment count of referral code if id exists
+    async function incrementReferralCode(referralCode) {
+
+        var referralCodeExists = await checkReferralCodeExists(referralCode);
+
+        if (referralCodeExists) {
+            const referralCodeCount = Waitlist.findOneAndUpdate({ _id: referralCode }, { $inc: { referral: 1 } })
+            .then((docs)=>{
+                return true;
+            }
+            )
+            .catch((error)=>{
+                console.log("Error: ", error);
+                return false;
+            }
+            );
+        }
+        // return false;
+    }
+
+
+module.exports = { generateUniqueReferralCode, checkReferralCodeExists, incrementReferralCode };
