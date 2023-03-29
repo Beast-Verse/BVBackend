@@ -18,7 +18,7 @@ app.get("/", (req, res) => {
 })
 
 //Available Routes
-app.use('/api/', require('../routes/WaitlistForm'));
+// app.use('/api/', require('../routes/WaitlistForm'));
 
 app.listen(port, () => {
     console.log(`Example app listening at http://localhost:${port}`)
