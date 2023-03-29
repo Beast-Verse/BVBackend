@@ -1,8 +1,9 @@
 const express = require("express");
 const router = express.Router();
-const Waitlist = require("../models/Waitlist");
 const { body, validationResult } = require("express-validator");
 const refcodegen = require("../utils/refcodegen");
+
+const prisma = require('../utils/prisma')
 
 
 router.post(
@@ -24,25 +25,40 @@ router.post(
           const newID = await refcodegen.generateUniqueReferralCode();
           console.log("New ID Generated: ", newID);
 
-    
-          const entry = new Waitlist({
-            _id: newID,
-            name,
-            email,
-            discord,
-            socials,
-            sources,
-            code
-          });
+          var today = new Date();
+          var dd = String(today.getDate()).padStart(2, '0');
+          var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
+          var yyyy = today.getFullYear();
+
+          today = mm + '/' + dd + '/' + yyyy;
+
+          await prisma.$connect()
+
+          var referralCodeExists = await refcodegen.checkReferralCodeExists(code);
+
+          if(!referralCodeExists && code != "") throw new Error("Invalid Code")
+
+          const entry = await prisma.pre_registration.create({
+            data: {
+              id: newID,
+              name: name,
+              email: email,
+              discord: discord,
+              socials: socials,
+              sources: sources,
+              referral: 0,
+              code: code,
+              date: today
+            },
+          })
 
           await refcodegen.incrementReferralCode(entry.code);
+    
+          res.json(entry);
 
-          const newEntry = await entry.save();
-
-          res.json(newEntry);
         } catch (error) {
           console.error(error.message);
-          res.status(500).send("Internal Server Error");
+          res.status(500).send(error.message);
         }
       }
   );
