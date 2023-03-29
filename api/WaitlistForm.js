@@ -2,11 +2,11 @@ const express = require("express");
 const router = express.Router();
 const Waitlist = require("../models/Waitlist");
 const { body, validationResult } = require("express-validator");
-const refcodegen = require("../refcodegen");
+const refcodegen = require("../utils/refcodegen");
 
 
 router.post(
-    "/addwaitlist",
+    "/",
     [
         body('name' , "Enter a valid name").isLength({ min: 3 }),
         body('email', "Enter a valid email").isEmail()

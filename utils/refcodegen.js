@@ -1,5 +1,5 @@
 //Generates the unique referral code for the user
-const Waitlist = require("./models/Waitlist");
+const Waitlist = require("../models/Waitlist");
 
 async function generateUniqueReferralCode() {
     const prefix = "BV-";
