@@ -1,11 +1,13 @@
-const connectToMongo = require('./db');
+require('dotenv').config();
+
+const connectToMongo = require('./utils/db');
 const express = require('express');
 const cors = require('cors');
+const waitlistForm = require('./api/WaitlistForm')
 
 connectToMongo();
 
 const app = express();
-const port = 5000;
 
 //using express
 app.use(express.json());
@@ -18,8 +20,10 @@ app.get("/", (req, res) => {
 })
 
 //Available Routes
-app.use('/api/', require('./routes/WaitlistForm'));
+app.use('/api/addwaitlist', waitlistForm);
 
-app.listen(port, () => {
-    console.log(`Example app listening at http://localhost:${port}`)
+app.listen(process.env.PORT, () => {
+    console.log(`Example app listening at http://localhost:${process.env.PORT}`)
 })
+
+module.exports = app
