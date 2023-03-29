@@ -1,0 +1,22 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mongodb"
+  url      = env("MONGO_URI")
+}
+
+model pre_registration {
+  id       String   @id @map("_id")
+  name     String
+  email    String   @unique
+  discord  String   @unique
+  socials  Boolean
+  sources  String
+  code     String
+  referral Int
+  date     String
+
+  @@map("pre-registration")
+}

@@ -1,11 +1,8 @@
 require('dotenv').config();
 
-const connectToMongo = require('./utils/db');
 const express = require('express');
 const cors = require('cors');
 const waitlistForm = require('./api/WaitlistForm')
-
-connectToMongo();
 
 const app = express();
 
