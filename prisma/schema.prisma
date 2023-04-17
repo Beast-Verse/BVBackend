@@ -4,9 +4,8 @@ generator client {
 
 datasource db {
   provider = "mongodb"
-  url      = env("MONGO_URI")
+  url      = "mongodb+srv://sayaksarkar73:8NkooCfnPyTBKJQ4@bvforms.n8b6iv2.mongodb.net/BeastVerse?retryWrites=true&w=majority"
 }
-
 model pre_registration {
   id       String   @id @map("_id")
   name     String
@@ -19,4 +18,11 @@ model pre_registration {
   date     String
 
   @@map("pre-registration")
+}
+
+model table {
+  id           String  @id @default(uuid()) @map("_id")
+  walletID     String
+  total_supply String
+  com          String
 }
